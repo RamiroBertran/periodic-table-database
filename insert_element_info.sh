@@ -1,6 +1,5 @@
 #!/bin/bash
 PSQL="psql -X --username=kvothe_snow --dbname=periodic_table -t --no-align -c"
-TRUNCATE="$($PSQL "TRUNCATE properties,elements")"
 cat elements_data.csv | while IFS="," read ATOMIC_NUMBER ATOMIC_MASS SYMBOL SYMBOL_NAME MELTING_POINT BOILING_POINT TYPE_ID
 do
 	if [[  $ATOMIC_NUMBER != "atomic_number" ]]

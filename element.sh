@@ -12,7 +12,7 @@ GET_ELEMENT_INFORMATION() {
   then
     GET_ELEMENT_INFORMATION "Please provide an element as an argument"
   else 
-    echo -e "$ELEMENT"
+    #Query to atomic_number
   fi
 }
 
