@@ -21,7 +21,7 @@ GET_ELEMENT_INFORMATION() {
       ATOMIC_NUMBER="$($PSQL "SELECT atomic_number FROM properties JOIN elements USING(atomic_number) WHERE (atomic_number=$ELEMENT)")"
       if [[ -z ATOMIC_NUMBER ]]
       then
-        GET_ELEMENT_INFORMATION "Sorry, we don't find any ralation in our database"
+        GET_ELEMENT_INFORMATION "I could not find that element in the database."
         else 
       # get name 
       NAME="$($PSQL "SELECT name FROM elements JOIN properties USING(atomic_number) WHERE (atomic_number=$ELEMENT)")"
@@ -33,6 +33,8 @@ GET_ELEMENT_INFORMATION() {
       MELTING_POINT="$($PSQL "SELECT melting_point_celsius FROM properties WHERE atomic_number=$ELEMENT")"
       # get boiling_point_celsius
       BOILING_POINT="$($PSQL "SELECT boiling_point_celsius FROM properties WHERE atomic_number=$ELEMENT")"
+      # get symbol 
+      SYMBOL="$($PSQL "SELECT symbol FROM elements JOIN properties USING(atomic_number) WHERE atomic_number=$ELEMENT")"
       fi
       else 
       # Since element is not a number:
@@ -40,7 +42,7 @@ GET_ELEMENT_INFORMATION() {
       ATOMIC_NUMBER="$($PSQL "SELECT atomic_number FROM properties JOIN elements USING(atomic_number) WHERE (symbol='$ELEMENT' OR name='$ELEMENT')")"
       if [[ -z $ATOMIC_NUMBER ]]
       then 
-        GET_ELEMENT_INFORMATION "Sorry we do not find any relation in our database"
+        GET_ELEMENT_INFORMATION "I could not find that element in the database."
         else
       #get type 
       TYPE="$($PSQL "SELECT type FROM properties JOIN types USING(type_id) JOIN elements USING(atomic_number) WHERE (symbol='$ELEMENT' OR name='$ELEMENT')")"
@@ -50,6 +52,8 @@ GET_ELEMENT_INFORMATION() {
       MELTING_POINT="$($PSQL "SELECT melting_point_celsius FROM properties JOIN elements USING(atomic_number) WHERE (symbol='$ELEMENT' OR name='$ELEMENT')")"
       #get boliling_point_celsius 
       BOILING_POINT="$($PSQL "SELECT boiling_point_celsius FROM properties JOIN elements USING(atomic_number) WHERE (symbol='$ELEMENT' OR name='$ELEMENT')")"
+      # get symbol 
+      SYMBOL="$($PSQL "SELECT symbol FROM elements WHERE (symbol='$ELEMENT' OR name='$ELEMENT')")"
       #get length of string
       ELEMENT_LENGHT=$(echo -n "$ELEMENT" | wc -m)
       if [[ $ELEMENT_LENGHT -gt 2 ]] 
@@ -64,6 +68,7 @@ GET_ELEMENT_INFORMATION() {
       fi
       fi
     fi
+    echo -e "\nThe element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL). It's a $TYPE, with a mass of $ATOMIC_MASS amu. $NAME has a melting point of $MELTING_POINT celsius and a boiling point of $BOILING_POINT celsius."
   fi
 }
 
